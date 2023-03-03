@@ -27,6 +27,7 @@ public class Raycaster : MonoBehaviour
     private void NewDetectInteraction()
     {
         // se o raio q sai da camera bate em alguma coisa
+        counter -= Time.deltaTime;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 6))
         {
 
@@ -46,8 +47,7 @@ public class Raycaster : MonoBehaviour
             {
                 _currentTarget = hit;
                 _interactionButton.SetActive(true);
-                crosshair.GetComponent<Image>().CrossFadeColor(hit.transform.gameObject.CompareTag("Player") ? Color.green : Color.blue, .5f, false, false);
-                counter -= Time.deltaTime;
+                crosshair.GetComponent<Image>().CrossFadeColor(hit.transform.gameObject.CompareTag("Player") ? Color.green : Color.blue, .5f, false, false);                
             } // senao verifica se o objeto é com o tag andavel            
             else
             {
@@ -81,9 +81,9 @@ public class Raycaster : MonoBehaviour
     {
         if (counter < 0)
         {
+            counter = 3;//reseta o contador
             if(_currentHitResult == HitResult.InteractableObject)_currentTarget.transform.gameObject.SendMessageUpwards("ButtonAction");
             else if (_currentHitResult == HitResult.SaltRing) fpswalk.positionToGo = _currentTarget.transform.position;
-            counter = 3;//reseta o contador
         }
     }
     private void OldDetectInteraction()
