@@ -4696,6 +4696,7 @@ GameObject:
   - component: {fileID: 1118726976}
   - component: {fileID: 1118726980}
   - component: {fileID: 1118726981}
+  - component: {fileID: 1118726982}
   m_Layer: 0
   m_Name: FPSController
   m_TagString: Untagged
@@ -4877,8 +4878,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9427f094ed2744948828fa4567b29f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sensitivity: 80
+  _sensitivity: 120
   _dragTresHold: 5
+--- !u!114 &1118726982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118726975}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a0ac651a27536a44966d56a9047d5a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1155236579
 GameObject:
   m_ObjectHideFlags: 0
@@ -5856,7 +5869,7 @@ MonoBehaviour:
   sound: {fileID: 1419171096}
   toEnable: {fileID: 1861900905}
   rdb: {fileID: 1419171101}
-  force: {x: 0, y: 0, z: 3}
+  force: {x: 0, y: 0, z: 100}
 --- !u!54 &1419171101
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5871,7 +5884,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 94
   m_CollisionDetection: 0
 --- !u!1 &1488634595
 GameObject:
@@ -8205,7 +8218,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -8255,7 +8268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.29411766}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
