@@ -455,6 +455,7 @@ GameObject:
   - component: {fileID: 39481005}
   - component: {fileID: 39481004}
   - component: {fileID: 39481003}
+  - component: {fileID: 39481007}
   - component: {fileID: 39481006}
   m_Layer: 0
   m_Name: Main Camera
@@ -485,7 +486,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39481001}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e4afb5051bf2eb428ea5f8cc459e8d1, type: 3}
   m_Name: 
@@ -554,9 +555,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 39481001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b953565b77e6ee244b7d1ff82e9c371b, type: 3}
+  m_Script: {fileID: 11500000, guid: a96fda745f391ba4286ae27c16b8d389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotateByTouch: {fileID: 1118726981}
+  _clickActionWindow: 0.5
+  _interactionRange: 6
+--- !u!114 &39481007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39481001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7a4f03f836a68439c440cf600a0c42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerMove: {fileID: 1118726984}
 --- !u!1 &50239335
 GameObject:
   m_ObjectHideFlags: 0
@@ -4776,6 +4793,8 @@ GameObject:
   - component: {fileID: 1118726980}
   - component: {fileID: 1118726981}
   - component: {fileID: 1118726982}
+  - component: {fileID: 1118726983}
+  - component: {fileID: 1118726984}
   m_Layer: 0
   m_Name: FPSController
   m_TagString: Untagged
@@ -4957,7 +4976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9427f094ed2744948828fa4567b29f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sensitivity: 120
+  _sensitivity: 0.1
   _dragTresHold: 5
 --- !u!114 &1118726982
 MonoBehaviour:
@@ -4971,7 +4990,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a0ac651a27536a44966d56a9047d5a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _senitivity: 70
+  _sensitivity: 0.2
+--- !u!114 &1118726983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118726975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7358bd6798ca4b4f89ab31ac06169b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1118726984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118726975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeb99f0de781c29469ca0287940fc415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fpswalk: {fileID: 1118726980}
 --- !u!1 &1155236579
 GameObject:
   m_ObjectHideFlags: 0
@@ -6583,7 +6627,7 @@ GameObject:
   - component: {fileID: 1612283919}
   - component: {fileID: 1612283918}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ResetCamBTN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6653,9 +6697,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1118726982}
-        m_TargetAssemblyTypeName: CamereByGiro, Assembly-CSharp
-        m_MethodName: ResetCamera
+      - m_Target: {fileID: 1118726983}
+        m_TargetAssemblyTypeName: ResetCamera, Assembly-CSharp
+        m_MethodName: CameraReset
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8387,7 +8431,7 @@ GameObject:
   - component: {fileID: 2066313693}
   - component: {fileID: 2066313692}
   m_Layer: 5
-  m_Name: Button
+  m_Name: InteractBTN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

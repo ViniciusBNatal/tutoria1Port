@@ -5,8 +5,7 @@ using UnityEngine;
 public class CamereByGyro : MonoBehaviour
 {
     Gyroscope gyro;
-    [SerializeField] private float _senitivity;
-    private Quaternion _resetOrientation;
+    [SerializeField, Range(0f, 1f)] private float _sensitivity;
     private void Awake()
     {
         if (SystemInfo.supportsGyroscope)
@@ -15,7 +14,7 @@ public class CamereByGyro : MonoBehaviour
             gyro.enabled = true;
         }
         else Debug.LogWarning("gyro not supported on YOUR device");
-        _resetOrientation = transform.rotation;
+
     }
     private void Update()
     {
@@ -24,7 +23,7 @@ public class CamereByGyro : MonoBehaviour
             //precisava saber se tem uma forma melhor de saber qual q funciona no aparelho atual
             if (gyro.attitude.x == 0f || gyro.attitude.y == 0f || gyro.attitude.z == 0f || gyro.attitude.w == 0f)
             {
-                transform.eulerAngles += _senitivity * Time.deltaTime * new Vector3(-gyro.rotationRateUnbiased.x, -gyro.rotationRateUnbiased.y, 0);
+                transform.eulerAngles += _sensitivity * new Vector3(-gyro.rotationRateUnbiased.x, -gyro.rotationRateUnbiased.y, 0);
                 //Debug.Log("a");
             }
             // talvez tenha q fazer o Z e W ser -
@@ -35,9 +34,5 @@ public class CamereByGyro : MonoBehaviour
                 //Debug.Log("b");
             }
         }
-    }
-    public void ResetCamera()
-    {
-        transform.rotation = _resetOrientation;
     }
 }

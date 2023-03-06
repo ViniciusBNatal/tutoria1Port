@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class RotateByTouch : MonoBehaviour
 {
-    [SerializeField] private float _sensitivity;
+    [SerializeField, Range(0f, 1f)] private float _sensitivity;
     [SerializeField] private float _dragTresHold;
-
-    // Update is called once per frame
+    public float DragTresHold => _dragTresHold;
     void Update()
     {
         if (Input.touchCount > 0)
@@ -16,7 +15,7 @@ public class RotateByTouch : MonoBehaviour
 
             if (input.phase == TouchPhase.Moved && input.deltaPosition.magnitude > _dragTresHold)
             {
-                transform.eulerAngles += _sensitivity * Time.deltaTime * new Vector3(input.deltaPosition.y * -1f, input.deltaPosition.x, 0).normalized;
+                transform.eulerAngles += _sensitivity * new Vector3(-input.deltaPosition.y, input.deltaPosition.x, 0);
             }
         }
     }
