@@ -5,6 +5,7 @@ using UnityEngine;
 public class InteractionProcessor : MonoBehaviour
 {
     [SerializeField] PlayerMove _playerMove;
+    [SerializeField] ZoomInOut _zoomInOut;
     private enum HitResult
     {
         InteractableObject,
@@ -29,7 +30,7 @@ public class InteractionProcessor : MonoBehaviour
     }
     private void Interact(Transform target, HitResult hitResult)
     {
-        if (hitResult == HitResult.InteractableObject)target.gameObject.SendMessageUpwards("ButtonAction");
+        if (hitResult == HitResult.InteractableObject) /*_zoomInOut.InspectObject(target);*/target.gameObject.SendMessageUpwards("ButtonAction");
         else if (hitResult == HitResult.SaltRing) _playerMove.MovePlayer(target.position);
     }
 
