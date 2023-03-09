@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(InteractionProcessor))]
 public class InteractionByTouch : MonoBehaviour
 {
-    [SerializeField] private RotateByTouch _rotateByTouch;
     [SerializeField] private float _clickActionWindow;
     [SerializeField] private float _interactionRange = 6f;
     private InteractionProcessor _interactionProcessor;
@@ -31,7 +30,7 @@ public class InteractionByTouch : MonoBehaviour
             else if (input.phase == TouchPhase.Ended && _currentActionWindow >= 0f)
             {
                 Physics.Raycast(_camera.ScreenPointToRay(_initialContactPoint), out RaycastHit hit, _interactionRange);
-                _interactionProcessor.ProcessInteraction(hit.transform);
+                if(hit.transform)_interactionProcessor.ProcessInteraction(hit.transform);
             }
         }
         _currentActionWindow -= Time.deltaTime;
