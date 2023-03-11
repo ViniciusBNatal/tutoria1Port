@@ -9,17 +9,19 @@ public class InteractionProcessor : MonoBehaviour
 {
     [SerializeField] PlayerMove _playerMove;
     [SerializeField] CameraFilterTypeData _cameraFilterTypeData;
+    [SerializeField] InventoryUI _inventoryUI;
     private ZoomInOut _zoomInOut;
     public static Action OnInteractWithInspectableItem;
     private UpdateTargetToControls _updateTargetToControls;
     private bool _isInteractionAvailable = true;
+    private Transform _currentTarget;
 
     private void Awake()
     {
         _updateTargetToControls = GetComponent<UpdateTargetToControls>();
         _zoomInOut = GetComponent<ZoomInOut>();
     }
-    
+
     private enum HitResult
     {
         InteractableObject,
@@ -29,7 +31,11 @@ public class InteractionProcessor : MonoBehaviour
     };
     public void ProcessInteraction(Transform obj)
     {
-        /*if(_isInteractionAvailable)*/Interact(obj, DefineInteraction(obj));
+        if (_isInteractionAvailable)
+        {
+            _currentTarget = obj;
+            Interact(obj, DefineInteraction(obj));
+        }
     }
     private HitResult DefineInteraction(Transform target)
     {
@@ -46,28 +52,41 @@ public class InteractionProcessor : MonoBehaviour
         }
     }
     private void Interact(Transform target, HitResult hitResult)
-    {        
+    {
         switch (hitResult)
         {
             case HitResult.SaltRing:
-                _playerMove.MovePlayer(target.position);                
+                _playerMove.MovePlayer(target.position);
                 break;
             case HitResult.InspectableObject:
-                OnInteractWithInspectableItem?.Invoke();                
+                _isInteractionAvailable = false;
+                OnInteractWithInspectableItem?.Invoke();
                 _updateTargetToControls.UpdateTargets(target, _cameraFilterTypeData.ControlTypes);
-                _zoomInOut.InspectObject(target, OnIntspectionEnd);
+                if(target.GetComponent<CollectableItem>()) _zoomInOut.InspectObject(target, OnInspectionEnd, OnExitInspectionMode);
+                else _zoomInOut.InspectObject(target, OnInspectionEnd, null);
                 break;
             case HitResult.InteractableObject:
-                target.gameObject.SendMessageUpwards("ButtonAction");
+                target.GetComponent<EventLook>().ButtonAction(_inventoryUI);
                 break;
             default:
                 break;
         }
     }
-     private void OnIntspectionEnd()
+    private void OnInspectionEnd()
     {
         _updateTargetToControls.UpdateTargets(CameraControlerManager.Instance.PlayerTransform, CameraControlerManager.Instance.CurrentControlsActive.Keys.ToArray());
         CamereByGyro.RotationCorrection = false;
         RotateByTouch.RotationCorrection = false;
+        Invoke("UnlockInteraction", Time.fixedDeltaTime);
+    }
+
+    private void OnExitInspectionMode(CollectableItem collectableItem)
+    {
+        _inventoryUI.UpdateInventoryIcon(collectableItem);
+        _currentTarget.GetComponent<CollectableItem>().Collect(collectableItem);
+    }
+    private void UnlockInteraction()
+    {
+        _isInteractionAvailable = true;
     }
 }

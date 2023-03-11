@@ -8,10 +8,16 @@ public class EventLook : MonoBehaviour
     public GameObject toEnable;
     public Rigidbody rdb;
     public Vector3 force;
+    [SerializeField] private CollectableItemData _itemRequired;
 
     //funcao que é chamada depois de um tempo olhando
-    public void ButtonAction()
+    public void ButtonAction(InventoryUI itemNeeded)
     {
+        if (_itemRequired != null && itemNeeded.CurrentItemID != _itemRequired.ItemID)
+        {
+            itemNeeded.TriggerAnimation(_itemRequired.ItemID);
+            return;
+        }
         //toca o som escolhido
         if (sound)
         {
@@ -25,8 +31,10 @@ public class EventLook : MonoBehaviour
         //adiciona uma força no objeto selecionado
         if (rdb)
         {
-            rdb.AddForce(force,ForceMode.Impulse);
+            rdb.AddForce(force, ForceMode.Impulse);
         }
+
+
     }
 
     //se acontece uma colisao toca o som

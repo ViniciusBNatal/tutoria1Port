@@ -28,7 +28,8 @@ public class ZoomInOut : MonoBehaviour
     private Quaternion _targetInitialRotation;
     private Vector3 _endInspectionTargetBasePostion;
     private Quaternion _endInspectionTargetRotation;
-    public Action _onInspectionEnd;
+    private Action _onAnimationInspectionEnd;
+    public Action<CollectableItem> _onExitInspectionMode;
     //player input position last frame
     private Vector2 _lastTouchPosA;
     private Vector2 _lastTouchPosB;
@@ -37,16 +38,17 @@ public class ZoomInOut : MonoBehaviour
     private bool _isBringingObjectCloser;
     private bool _isInteracting;
 
-    public void InspectObject(Transform target, Action OnInspectionEnd)
+    public void InspectObject(Transform target, Action OnAnimationInspectionEnd, Action<CollectableItem> OnExitInspectionMode)
     {
         if (!_isInAnimationTransition)
-        {            
+        {
             _isInAnimationTransition = true;
             _isBringingObjectCloser = true;
             _isInteracting = true;
 
             _currentDelta = 0;
-            _onInspectionEnd = null;
+            _onAnimationInspectionEnd = null;
+            _onExitInspectionMode = null;
 
             _targetInitialPosition = target.position;
             _targetInitialRotation = target.rotation;
@@ -55,7 +57,8 @@ public class ZoomInOut : MonoBehaviour
             CamereByGyro.RotationCorrection = true;
             RotateByTouch.RotationCorrection = true;
 
-            _onInspectionEnd += OnInspectionEnd;
+            _onAnimationInspectionEnd += OnAnimationInspectionEnd;
+            _onExitInspectionMode += OnExitInspectionMode;
             _targetObj = target;
         }
     }
@@ -89,21 +92,6 @@ public class ZoomInOut : MonoBehaviour
                         _targetObj.position = newDistance;
                     }
                 }
-                //if (currentDistance != lastFrameDistance && newDistanceFromCamera > _minDistanceFromCamera && newDistanceFromCamera < _maxDistanceFromCamera)
-                //{
-                //    Debug.Log(newDistanceFromCamera);
-                //    _targetObj.position = newDistance;
-                //}
-                ////zoomIn
-                //if (currentDistance > lastFrameDistance && targetDistanceFromCamera > _minDistanceFromCamera)
-                //{
-                //    _targetObj.position += -_cameraPosition.forward * Mathf.Abs(currentDistance - lastFrameDistance);
-                //}
-                ////zoomOut
-                //else if (currentDistance > lastFrameDistance && targetDistanceFromCamera < _maxDistanceFromCamera)
-                //{
-                //    _targetObj.position += _cameraPosition.forward * Mathf.Abs(currentDistance - lastFrameDistance);
-                //}
             }
             _lastTouchPosA = touchA.position;
             _lastTouchPosB = touchB.position;
@@ -116,29 +104,15 @@ public class ZoomInOut : MonoBehaviour
         {
             if (_targetObj.position != _basePosition.position && _isBringingObjectCloser)
             {
-                _currentDelta += Time.deltaTime * _animSpeed;
-                Vector3 pos = new Vector3(
-                Mathf.Lerp(_targetInitialPosition.x, _basePosition.position.x, _currentDelta),
-                Mathf.Lerp(_targetInitialPosition.y, _basePosition.position.y, _currentDelta),
-                Mathf.Lerp(_targetInitialPosition.z, _basePosition.position.z, _currentDelta)
-                );
-                _targetObj.position = pos;
+                _currentDelta += Time.deltaTime * _animSpeed;                
+                _targetObj.position = Vector3.Lerp(_targetInitialPosition, _basePosition.position, _currentDelta);
                 return false;
             }
             else if (_targetObj.position != _targetInitialPosition && !_isBringingObjectCloser)
             {
                 _currentDelta += Time.deltaTime * _animSpeed;
-                Vector3 pos = new Vector3(
-                Mathf.Lerp(_endInspectionTargetBasePostion.x, _targetInitialPosition.x, _currentDelta),
-                Mathf.Lerp(_endInspectionTargetBasePostion.y, _targetInitialPosition.y, _currentDelta),
-                Mathf.Lerp(_endInspectionTargetBasePostion.z, _targetInitialPosition.z, _currentDelta)
-                );
-                Quaternion rot = new Quaternion(
-                    Mathf.Lerp(_endInspectionTargetRotation.x, _targetInitialRotation.x, _currentDelta),
-                    Mathf.Lerp(_endInspectionTargetRotation.y, _targetInitialRotation.y, _currentDelta),
-                    Mathf.Lerp(_endInspectionTargetRotation.z, _targetInitialRotation.z, _currentDelta),
-                    Mathf.Lerp(_endInspectionTargetRotation.w, _targetInitialRotation.w, _currentDelta)
-                    );
+                Vector3 pos = Vector3.Lerp(_endInspectionTargetBasePostion, _targetInitialPosition, _currentDelta);
+                Quaternion rot = Quaternion.Lerp(_endInspectionTargetRotation, _targetInitialRotation, _currentDelta);                   
                 _targetObj.SetPositionAndRotation(pos, rot);
                 return false;
             }
@@ -146,7 +120,7 @@ public class ZoomInOut : MonoBehaviour
             if (!_isBringingObjectCloser)
             {
                 _isInteracting = false;
-                _onInspectionEnd?.Invoke();
+                _onAnimationInspectionEnd?.Invoke();
             }
         }
         return true;
@@ -157,10 +131,19 @@ public class ZoomInOut : MonoBehaviour
         if (!_isInAnimationTransition)
         {
             _currentDelta = 0;
-            _endInspectionTargetBasePostion = _targetObj.position;
-            _endInspectionTargetRotation = _targetObj.rotation;
-            _isBringingObjectCloser = false;
-            _isInAnimationTransition = true;
+            if (_onExitInspectionMode != null)
+            {
+                _isInteracting = false;
+                _onExitInspectionMode?.Invoke(_targetObj.GetComponent<CollectableItem>());
+                _onAnimationInspectionEnd?.Invoke();
+            }
+            else
+            {
+                _endInspectionTargetBasePostion = _targetObj.position;
+                _endInspectionTargetRotation = _targetObj.rotation;
+                _isBringingObjectCloser = false;
+                _isInAnimationTransition = true;
+            }
             if (buttonUI) buttonUI.SetActive(false);
         }
     }
