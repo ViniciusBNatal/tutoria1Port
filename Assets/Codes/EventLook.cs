@@ -18,6 +18,8 @@ public class EventLook : MonoBehaviour
             itemNeeded.TriggerAnimation(_itemRequired.ItemID);
             return;
         }
+
+        itemNeeded.UpdateInventoryIcon(null);
         //toca o som escolhido
         if (sound)
         {
