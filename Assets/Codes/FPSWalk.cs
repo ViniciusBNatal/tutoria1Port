@@ -61,4 +61,8 @@ public class FPSWalk : MonoBehaviour
             safe = false;
         }
     }
+    public void Heal(float value)
+    {
+        counttodie += value;
+    }
 }
