@@ -77,7 +77,7 @@ public class InteractionProcessor : MonoBehaviour
         _updateTargetToControls.UpdateTargets(CameraControlerManager.Instance.PlayerTransform, CameraControlerManager.Instance.CurrentControlsActive.Keys.ToArray());
         CamereByGyro.RotationCorrection = false;
         RotateByTouch.RotationCorrection = false;
-        Invoke("UnlockInteraction", Time.fixedDeltaTime);
+        Invoke(nameof(UnlockInteraction), Time.fixedDeltaTime);
     }
 
     private void OnExitInspectionMode(CollectableItem collectableItem)
