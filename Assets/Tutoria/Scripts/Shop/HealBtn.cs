@@ -18,7 +18,7 @@ public class HealBtn : MonoBehaviour
     private void ActivateBoost()
     {
         _fPSWalk.Heal(_healAmount);
-        ShopResourcesManager.UpdateMedkits(-1);
+        ShopResourcesManager.UpdateMedKits(-1);
     }
 
     private void UpdateText(string newText)

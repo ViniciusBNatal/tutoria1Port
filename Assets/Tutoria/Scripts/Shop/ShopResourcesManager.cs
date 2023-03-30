@@ -11,9 +11,14 @@ public class ShopResourcesManager : MonoBehaviour
     };
     private static int _medkitsCount;
     public static Action<string> OnUpdateMedkitCount;
-    public static void UpdateMedkits(int value)
+    public static void UpdateMedKits(int value)
     {
         _medkitsCount = Mathf.Clamp(_medkitsCount + value, 0, 999);
         OnUpdateMedkitCount?.Invoke(_medkitsCount.ToString());
+    }
+
+    public static void BuyMedKits(UnityEngine.Purchasing.Product product)
+    {
+        UpdateMedKits((int)product.definition.payout.quantity);
     }
 }
