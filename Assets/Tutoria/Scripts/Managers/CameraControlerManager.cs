@@ -78,16 +78,16 @@ public class CameraControlerManager : BaseSingleton<CameraControlerManager>
     {
         if (_controlTypesActiveBeforeUIMode == null)
         {
-            byte index = 0;
-            _controlTypesActiveBeforeUIMode = (ControlTypes[])_allCameraControls.Select(x => x.IsActive).OfType<ControlTypes>();
-            for (int i = 0; i < _allCameraControls.Length; i++)
+            _controlTypesActiveBeforeUIMode = _allCameraControls.Where(x => x.IsActive).Select(x => x.ControlType).ToArray();
+            for (int i = 0; i < _controlTypesActiveBeforeUIMode.Length; i++)
             {
-                if (_allCameraControls[i].IsActive)
+                _cameraControlsDic[_controlTypesActiveBeforeUIMode[i]] = new CameraData
                 {
-                    _controlTypesActiveBeforeUIMode[index] = _allCameraControls[i].ControlType;
-                    _allCameraControls[i].IsActive = false;
-                    index++;
-                }
+                    CameraControlScript = _cameraControlsDic[_controlTypesActiveBeforeUIMode[i]].CameraControlScript,
+                    ControlType = _cameraControlsDic[_controlTypesActiveBeforeUIMode[i]].ControlType,
+                    IsActive = false
+                };
+                _cameraControlsDic[_controlTypesActiveBeforeUIMode[i]].CameraControlScript.enabled = false;
             }
         }
         else
