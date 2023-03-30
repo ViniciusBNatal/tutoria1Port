@@ -6,7 +6,7 @@ using System.Linq;
 public class CameraControlerManager : BaseSingleton<CameraControlerManager>
 {
     [SerializeField] private CameraData[] _allCameraControls;
-    [SerializeField] private Transform _playerTransform;    
+    [SerializeField] private Transform _playerTransform;
 
     [System.Serializable]
     public struct CameraData
@@ -32,6 +32,8 @@ public class CameraControlerManager : BaseSingleton<CameraControlerManager>
     private Dictionary<ControlTypes, CameraData> _cameraControlsDic = new Dictionary<ControlTypes, CameraData>();
     public Dictionary<ControlTypes, CameraData> CurrentControlsActive => _cameraControlsDic;
     public Transform PlayerTransform => _playerTransform;
+
+    private ControlTypes[] _controlTypesActiveBeforeUIMode = null;
 
     override protected void Awake()
     {
@@ -69,6 +71,38 @@ public class CameraControlerManager : BaseSingleton<CameraControlerManager>
                 _cameraControlsDic[cameraDatas[i].ControlType] = cameraDatas[i];
                 _cameraControlsDic[cameraDatas[i].ControlType].CameraControlScript.enabled = cameraDatas[i].IsActive;
             }
+        }
+    }
+
+    public void ActivateUIMode()
+    {
+        if (_controlTypesActiveBeforeUIMode == null)
+        {
+            byte index = 0;
+            _controlTypesActiveBeforeUIMode = (ControlTypes[])_allCameraControls.Select(x => x.IsActive).OfType<ControlTypes>();
+            for (int i = 0; i < _allCameraControls.Length; i++)
+            {
+                if (_allCameraControls[i].IsActive)
+                {
+                    _controlTypesActiveBeforeUIMode[index] = _allCameraControls[i].ControlType;
+                    _allCameraControls[i].IsActive = false;
+                    index++;
+                }
+            }
+        }
+        else
+        {
+            for(int a = 0; a < _controlTypesActiveBeforeUIMode.Length; a++)
+            {
+                _cameraControlsDic[_controlTypesActiveBeforeUIMode[a]] = new CameraData
+                {
+                    CameraControlScript = _cameraControlsDic[_controlTypesActiveBeforeUIMode[a]].CameraControlScript,
+                    ControlType = _cameraControlsDic[_controlTypesActiveBeforeUIMode[a]].ControlType,
+                    IsActive = true
+                };
+                _cameraControlsDic[_controlTypesActiveBeforeUIMode[a]].CameraControlScript.enabled = true;
+            }
+            _controlTypesActiveBeforeUIMode = null;
         }
     }
 }
