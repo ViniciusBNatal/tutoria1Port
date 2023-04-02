@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Purchasing;
 
 public class ShopResourcesManager : MonoBehaviour
 {
     public enum ShopItemTypes
     {
-        MedKit,
+        MEDKIT,
     };
     private static int _medkitsCount;
     public static Action<string> OnUpdateMedkitCount;
@@ -17,8 +18,18 @@ public class ShopResourcesManager : MonoBehaviour
         OnUpdateMedkitCount?.Invoke(_medkitsCount.ToString());
     }
 
-    public static void BuyMedKits(UnityEngine.Purchasing.Product product)
+    public static void BuyMedKits(Product product)
     {
         UpdateMedKits((int)product.definition.payout.quantity);
+    }
+
+    public static void BuyProduct(ShopItemTypes type, Product product)
+    {
+        switch (type)
+        {
+            case ShopItemTypes.MEDKIT:
+                BuyMedKits(product);
+                break;
+        }
     }
 }
